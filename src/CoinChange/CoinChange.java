@@ -1,6 +1,8 @@
 package CoinChange;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Given an integer array of coins[ ] of size N representing different types of denominations and an integer sum,
@@ -21,8 +23,16 @@ import java.util.Arrays;
 public class CoinChange {
     public static void main(String[] args) {
 
-       int sum = 10; int[] coins = {2, 5, 3, 6};
+       int sum = 8; int[] coins = {1,2,3,4,5};
+       List<Integer> coinsList = new ArrayList<>();
+       coinsList.add(1);
+       coinsList.add(2);
+       coinsList.add(3);
+       coinsList.add(4);
+       coinsList.add(5);
+
         System.out.println(numOfCoins_recursive(sum, coins));
+        System.out.println(numOfCoins_dp(sum, coinsList));
 
     }
 
@@ -41,14 +51,30 @@ public class CoinChange {
 
     }
 
-//    public static int numOfCoins_dp(int sum,int[] coins){
-//        int[] count = new int[sum + 2];
-//
-//        count[0] = 1;
-//        count[1] = 1;
-//
-//        for (int i = 2; i < sum; i++) {
-//           count[i] = count[i - 1] + count[];
-//        }
-//    }
+    public static int numOfCoins_dp(int sum, List<Integer> coins){
+        int[][] count = new int[coins.size() + 1][sum + 1];
+
+
+        count[0][0] = 1;
+        for (int i = 1; i <= coins.size(); i++) {
+
+            for (int j = 0; j <= sum; j++) {
+
+                count[i][j] += count[i-1][j];
+                if ((j - coins.get(i - 1)) >= 0) {
+                    count[i][j] += count[i][j - coins.get(i - 1)];
+                }
+
+            }
+        }
+
+        for (int i = 1; i <= coins.size(); i++) {
+            for (int j = 1; j <= sum; j++) {
+                System.out.print(count[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        return count[coins.size()][sum];
+    }
 }
